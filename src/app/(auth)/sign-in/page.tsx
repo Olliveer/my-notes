@@ -104,14 +104,14 @@ export default function LoginPage() {
                         Password
                       </Label>
                       <Link
-                        href="#"
+                        href="/forgot-password"
                         className="link intent-info variant-ghost text-sm"
                       >
                         Forgot your Password ?
                       </Link>
                     </div>
                     <FormControl>
-                      <Input placeholder="" {...field} />
+                      <Input type="password" placeholder="" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

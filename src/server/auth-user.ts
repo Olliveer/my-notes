@@ -60,3 +60,19 @@ export async function signOut() {
     throw error;
   }
 }
+
+export async function forgotPassword({ email }: { email: string }) {
+  try {
+    const response = await auth.api.forgetPassword({
+      body: {
+        email,
+      },
+      asResponse: false,
+    });
+
+    return response;
+  } catch (error) {
+    console.log("forgotPassword error", error);
+    throw error;
+  }
+}

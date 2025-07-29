@@ -21,6 +21,7 @@ import { signUp } from "@/server/auth-user";
 import { toast } from "sonner";
 import { useState } from "react";
 import { LoaderIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters long").max(50),
@@ -33,6 +34,7 @@ const formSchema = z.object({
 });
 
 export default function SignUpPage() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -56,13 +58,15 @@ export default function SignUpPage() {
         email: data.email,
         password: data.password,
       });
-      toast("Sign up successful");
+
+      toast("Check your email for verification");
+      form.reset();
+      router.push("/sign-in");
     } catch (error) {
       console.log(error);
       toast(`Something went wrong ${error}`);
     } finally {
       setIsLoading(false);
-      form.reset();
     }
   };
 
