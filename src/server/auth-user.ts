@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 interface SignInProps {
   email: string;
@@ -20,7 +21,7 @@ export async function signIn({ email, password }: SignInProps) {
     return response;
   } catch (error) {
     console.log("signIn error", error);
-    return error;
+    throw error;
   }
 }
 
@@ -44,6 +45,18 @@ export async function signUp({ name, email, password }: SignUpProps) {
     return response;
   } catch (error) {
     console.log("signUp error", error);
-    return error;
+    throw error;
+  }
+}
+
+export async function signOut() {
+  try {
+    const response = await auth.api.signOut({
+      headers: await headers(),
+    });
+    return response;
+  } catch (error) {
+    console.log("signOut error", error);
+    throw error;
   }
 }
