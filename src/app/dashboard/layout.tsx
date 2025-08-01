@@ -1,5 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { BreadcrumbComponent } from "@/components/breadcrumb";
+import { ModeToggle } from "@/components/mode-toggle";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -41,9 +42,10 @@ export default async function DashboardLayout({
               ]}
             />
           </div>
+          <ModeToggle />
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <div className="bg-muted/20 min-h-[100vh] flex-1 rounded-xl md:min-h-min p-3">
+          <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min p-3">
             {children}
           </div>
         </div>
