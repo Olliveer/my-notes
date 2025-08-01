@@ -17,10 +17,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { signIn } from "@/server/auth-user";
-import { useState } from "react";
+import { Component, useState } from "react";
 import { LoaderIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { FaGithub } from "react-icons/fa6";
+import { authClient } from "@/lib/auth-client";
 
 const formSchema = z.object({
   email: z.email(),
@@ -56,6 +58,26 @@ export default function LoginPage() {
     }
   };
 
+  const handleGithubSignIn = async () => {
+    try {
+      setIsLoading(true);
+      const data = await authClient.signIn.social({
+        provider: "github",
+        callbackURL: "/dashboard",
+      });
+      if (data.error) {
+        toast(data.error.message);
+        return;
+      }
+
+      toast("Sign in successful");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <section className="flex min-h-screen bg-zinc-50 px-4 py-16 md:py-32 dark:bg-transparent">
       <Form {...form}>
@@ -86,7 +108,10 @@ export default function LoginPage() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="" {...field} />
+                      <Input
+                        placeholder=""
+                        {...field}
+                      />
                     </FormControl>
 
                     <FormMessage />
@@ -100,7 +125,10 @@ export default function LoginPage() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <Label htmlFor="pwd" className="text-title text-sm">
+                      <Label
+                        htmlFor="pwd"
+                        className="text-title text-sm"
+                      >
                         Password
                       </Label>
                       <Link
@@ -111,14 +139,22 @@ export default function LoginPage() {
                       </Link>
                     </div>
                     <FormControl>
-                      <Input type="password" placeholder="" {...field} />
+                      <Input
+                        type="password"
+                        placeholder=""
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isLoading}
+              >
                 {isLoading && (
                   <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                 )}
@@ -135,41 +171,33 @@ export default function LoginPage() {
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <Button type="button" variant="outline">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="0.98em"
-                  height="1em"
-                  viewBox="0 0 256 262"
-                >
-                  <path
-                    fill="#4285f4"
-                    d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622l38.755 30.023l2.685.268c24.659-22.774 38.875-56.282 38.875-96.027"
-                  ></path>
-                  <path
-                    fill="#34a853"
-                    d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055c-34.523 0-63.824-22.773-74.269-54.25l-1.531.13l-40.298 31.187l-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1"
-                  ></path>
-                  <path
-                    fill="#fbbc05"
-                    d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82c0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602z"
-                  ></path>
-                  <path
-                    fill="#eb4335"
-                    d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0C79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
-                  ></path>
-                </svg>
-                <span>Google</span>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleGithubSignIn}
+              >
+                <FaGithub className="mr-2 size-4" />
+                <span>Github</span>
               </Button>
-              <Button type="button" variant="outline">
+              <Button
+                disabled
+                type="button"
+                variant="outline"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="1em"
                   height="1em"
                   viewBox="0 0 256 256"
                 >
-                  <path fill="#f1511b" d="M121.666 121.666H0V0h121.666z"></path>
-                  <path fill="#80cc28" d="M256 121.666H134.335V0H256z"></path>
+                  <path
+                    fill="#f1511b"
+                    d="M121.666 121.666H0V0h121.666z"
+                  ></path>
+                  <path
+                    fill="#80cc28"
+                    d="M256 121.666H134.335V0H256z"
+                  ></path>
                   <path
                     fill="#00adef"
                     d="M121.663 256.002H0V134.336h121.663z"
@@ -187,7 +215,11 @@ export default function LoginPage() {
           <div className="p-3">
             <p className="text-accent-foreground text-center text-sm">
               Don&apos;t have an account ?
-              <Button asChild variant="link" className="px-2">
+              <Button
+                asChild
+                variant="link"
+                className="px-2"
+              >
                 <Link href="/sign-up">Create account</Link>
               </Button>
             </p>

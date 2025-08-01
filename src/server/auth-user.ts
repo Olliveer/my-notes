@@ -21,6 +21,9 @@ export async function signIn({ email, password }: SignInProps) {
     return response;
   } catch (error) {
     console.log("signIn error", error);
+    if ((error as any).statusCode === 403) {
+      throw new Error("Please verify your email address");
+    }
     throw error;
   }
 }

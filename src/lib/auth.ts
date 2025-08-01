@@ -32,8 +32,8 @@ export const auth = betterAuth({
         throw new Error("Failed to send verification email");
       }
     },
+    requireEmailVerification: false,
   },
-  requireEmailVerification: true,
   emailVerification: {
     sendVerificationEmail: async ({ user, url, token }, request) => {
       const { error } = await resend.emails.send({
@@ -51,6 +51,12 @@ export const auth = betterAuth({
       }
     },
     sendOnSignUp: true,
+  },
+  socialProviders: {
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID as string,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+    },
   },
   plugins: [nextCookies()],
 });
