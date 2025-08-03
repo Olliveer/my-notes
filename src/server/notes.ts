@@ -53,7 +53,7 @@ export const getNoteById = async (id: string) => {
   }
 };
 
-export const updateNote = async (id: string, values: NoteInsert) => {
+export const updateNote = async (id: string, values: Partial<NoteInsert>) => {
   try {
     const session = await auth.api.getSession({
       headers: await headers(),
