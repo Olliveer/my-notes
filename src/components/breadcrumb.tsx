@@ -3,7 +3,9 @@ import {
   BreadcrumbList,
   BreadcrumbItem,
   BreadcrumbLink,
+  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Fragment } from "react";
 
 type Props = {
   breadcrumb: {
@@ -17,9 +19,14 @@ export function BreadcrumbComponent({ breadcrumb }: Props) {
     <Breadcrumb>
       <BreadcrumbList>
         {breadcrumb.map((item, index) => (
-          <BreadcrumbItem key={index}>
-            <BreadcrumbLink href={item.href}>{item.title}</BreadcrumbLink>
-          </BreadcrumbItem>
+          <Fragment key={item.href}>
+            <BreadcrumbItem>
+              <BreadcrumbLink href={item.href}>{item.title}</BreadcrumbLink>
+            </BreadcrumbItem>
+            {index < breadcrumb.length - 1 && (
+              <BreadcrumbSeparator key={index + "separator"} />
+            )}
+          </Fragment>
         ))}
       </BreadcrumbList>
     </Breadcrumb>

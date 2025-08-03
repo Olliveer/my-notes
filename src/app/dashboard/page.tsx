@@ -1,14 +1,16 @@
-import Logout from "@/components/logout";
+import CreateNotebookButton from "@/components/create-notebook-button";
 import Notebooks from "@/components/notebooks";
 import { getNotebooksByUser } from "@/server/notebooks";
 
 export default async function DashboardPage() {
-  const notebooks = await getNotebooksByUser();
+  const data = await getNotebooksByUser();
 
   return (
     <div>
-      DashboardPage <Logout />
-      <Notebooks notebooks={notebooks} />
+      <CreateNotebookButton />
+      <h1 className="text-2xl font-bold">Notebooks</h1>
+
+      {data.notebooks && <Notebooks notebooks={data.notebooks} />}
     </div>
   );
 }

@@ -4,13 +4,14 @@ import { db } from "@/db/drizzle";
 import { NotebookInsert, notebooks } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { and, eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 export const createNotebook = async (values: NotebookInsert) => {
   try {
-    const notebook = await db.insert(notebooks).values(values);
+    await db.insert(notebooks).values(values);
 
-    return notebook;
+    revalidatePath("/dashboard");
   } catch (error) {
     console.log("createNotebook error", error);
     throw error;
@@ -26,14 +27,22 @@ export const getNotebooksByUser = async () => {
     if (!session?.user) {
       throw new Error("Unauthorized");
     }
-    const response = await db
-      .select()
-      .from(notebooks)
-      .where(eq(notebooks.userId, session.user.id));
-    return response;
+    const response = await db.query.notebooks.findMany({
+      where: eq(notebooks.userId, session.user.id),
+      with: {
+        notes: true,
+      },
+    });
+    return {
+      success: true,
+      notebooks: response,
+    };
   } catch (error) {
     console.log("getNotebooks error", error);
-    throw error;
+    return {
+      success: false,
+      error: error,
+    };
   }
 };
 
@@ -46,10 +55,12 @@ export const getNotebookById = async (id: string) => {
     if (!session?.user) {
       throw new Error("Unauthorized");
     }
-    const response = await db
-      .select()
-      .from(notebooks)
-      .where(and(eq(notebooks.id, id), eq(notebooks.userId, session.user.id)));
+    const response = await db.query.notebooks.findFirst({
+      where: and(eq(notebooks.id, id), eq(notebooks.userId, session.user.id)),
+      with: {
+        notes: true,
+      },
+    });
     return response;
   } catch (error) {
     console.log("getNotebookById error", error);
@@ -66,11 +77,11 @@ export const updateNotebook = async (id: string, values: NotebookInsert) => {
     if (!session?.user) {
       throw new Error("Unauthorized");
     }
-    const response = await db
+    await db
       .update(notebooks)
       .set(values)
       .where(and(eq(notebooks.id, id), eq(notebooks.userId, session.user.id)));
-    return response;
+    revalidatePath("/dashboard");
   } catch (error) {
     console.log("updateNotebook error", error);
     throw error;
@@ -86,10 +97,10 @@ export const deleteNotebook = async (id: string) => {
     if (!session?.user) {
       throw new Error("Unauthorized");
     }
-    const response = await db
+    await db
       .delete(notebooks)
       .where(and(eq(notebooks.id, id), eq(notebooks.userId, session.user.id)));
-    return response;
+    revalidatePath("/dashboard");
   } catch (error) {
     console.log("deleteNotebook error", error);
     throw error;

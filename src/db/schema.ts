@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { pgTable, text, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -62,7 +62,9 @@ export const verification = pgTable("verification", {
 });
 
 export const notebooks = pgTable("notebooks", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
   name: text("name").notNull(),
   userId: text("user_id")
     .notNull()
@@ -79,15 +81,17 @@ export type Notebook = typeof notebooks.$inferSelect;
 export type NotebookInsert = typeof notebooks.$inferInsert;
 
 export const notebookRelations = relations(notebooks, ({ many, one }) => ({
-  notes: many(note),
+  notes: many(notes),
   user: one(user, {
     fields: [notebooks.userId],
     references: [user.id],
   }),
 }));
 
-export const note = pgTable("notes", {
-  id: text("id").primaryKey(),
+export const notes = pgTable("notes", {
+  id: text("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
   title: text("title").notNull(),
   content: jsonb("content").notNull(),
   notebookId: text("notebook_id")
@@ -101,11 +105,12 @@ export const note = pgTable("notes", {
   ),
 });
 
-export type Note = typeof note.$inferSelect;
+export type Note = typeof notes.$inferSelect;
+export type NoteInsert = typeof notes.$inferInsert;
 
-export const noteRelations = relations(note, ({ one }) => ({
+export const noteRelations = relations(notes, ({ one }) => ({
   notebook: one(notebooks, {
-    fields: [note.notebookId],
+    fields: [notes.notebookId],
     references: [notebooks.id],
   }),
 }));
@@ -116,7 +121,7 @@ export const schema = {
   account,
   verification,
   notebooks,
-  note,
+  notes,
   notebookRelations,
   noteRelations,
 };
