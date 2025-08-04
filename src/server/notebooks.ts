@@ -61,10 +61,16 @@ export const getNotebookById = async (id: string) => {
         notes: true,
       },
     });
-    return response;
+    return {
+      success: true,
+      notebook: response,
+    };
   } catch (error) {
     console.log("getNotebookById error", error);
-    throw error;
+    return {
+      success: false,
+      error: error,
+    };
   }
 };
 

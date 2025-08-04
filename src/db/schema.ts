@@ -77,7 +77,9 @@ export const notebooks = pgTable("notebooks", {
   ),
 });
 
-export type Notebook = typeof notebooks.$inferSelect;
+export type Notebook = typeof notebooks.$inferSelect & {
+  notes: Note[];
+};
 export type NotebookInsert = typeof notebooks.$inferInsert;
 
 export const notebookRelations = relations(notebooks, ({ many, one }) => ({

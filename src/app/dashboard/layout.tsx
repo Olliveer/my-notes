@@ -1,5 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar";
-import { BreadcrumbComponent } from "@/components/breadcrumb";
+import NextBreadcrumb from "@/components/breadcrumb";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -35,12 +35,7 @@ export default async function DashboardLayout({
               orientation="vertical"
               className="mr-2 data-[orientation=vertical]:h-4"
             />
-            <BreadcrumbComponent
-              breadcrumb={[
-                { title: "Dashboard", href: "/dashboard" },
-                { title: "Home", href: "/dashboard/home" },
-              ]}
-            />
+            <NextBreadcrumb homeElement={"Home"} capitalizeLinks />
           </div>
           <ModeToggle />
         </header>

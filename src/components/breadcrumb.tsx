@@ -1,3 +1,7 @@
+"use client";
+
+import React, { Fragment } from "react";
+import { usePathname } from "next/navigation";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -5,30 +9,52 @@ import {
   BreadcrumbLink,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Fragment } from "react";
 
-type Props = {
-  breadcrumb: {
-    title: string;
-    href: string;
-  }[];
+type TBreadCrumbProps = {
+  homeElement?: string;
+  capitalizeLinks?: boolean;
+  customLabels?: Record<string, string>;
 };
 
-export function BreadcrumbComponent({ breadcrumb }: Props) {
+const NextBreadcrumb = ({
+  homeElement = "Home",
+  capitalizeLinks = true,
+  customLabels = {},
+}: TBreadCrumbProps) => {
+  const paths = usePathname();
+  const pathNames = paths.split("/").filter((path) => path);
+
   return (
     <Breadcrumb>
       <BreadcrumbList>
-        {breadcrumb.map((item, index) => (
-          <Fragment key={item.href}>
-            <BreadcrumbItem>
-              <BreadcrumbLink href={item.href}>{item.title}</BreadcrumbLink>
-            </BreadcrumbItem>
-            {index < breadcrumb.length - 1 && (
-              <BreadcrumbSeparator key={index + "separator"} />
-            )}
-          </Fragment>
-        ))}
+        <BreadcrumbItem>
+          <BreadcrumbLink href="/">{homeElement}</BreadcrumbLink>
+        </BreadcrumbItem>
+
+        {pathNames.length > 0 && <BreadcrumbSeparator />}
+
+        {pathNames.map((link, index) => {
+          const href = `/${pathNames.slice(0, index + 1).join("/")}`;
+          const isLast = pathNames.length === index + 1;
+
+          // Use custom label or format the link
+          let itemLink = customLabels[href] || customLabels[link] || link;
+          if (capitalizeLinks && !customLabels[href] && !customLabels[link]) {
+            itemLink = link[0].toUpperCase() + link.slice(1);
+          }
+
+          return (
+            <Fragment key={index}>
+              <BreadcrumbItem>
+                <BreadcrumbLink href={href}>{itemLink}</BreadcrumbLink>
+              </BreadcrumbItem>
+              {!isLast && <BreadcrumbSeparator />}
+            </Fragment>
+          );
+        })}
       </BreadcrumbList>
     </Breadcrumb>
   );
-}
+};
+
+export default NextBreadcrumb;
