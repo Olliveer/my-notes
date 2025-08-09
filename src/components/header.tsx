@@ -7,6 +7,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { useScroll } from "motion/react";
 import { ModeToggle } from "./mode-toggle";
+import Image from "next/image";
 
 const menuItems = [
   { name: "Features", href: "#link" },
@@ -45,7 +46,7 @@ export const HeroHeader = () => {
                 aria-label="home"
                 className="flex items-center space-x-2"
               >
-                <Logo />
+                <Image src="/logo.svg" alt="logo" width={18} height={18} />
               </Link>
 
               <button

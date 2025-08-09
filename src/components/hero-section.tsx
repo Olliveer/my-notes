@@ -51,7 +51,7 @@ export default function HeroSection() {
                   as="h1"
                   className="mt-8 max-w-2xl text-balance text-5xl font-medium md:text-6xl lg:mt-16"
                 >
-                  Build and Ship 10x faster with NS
+                  Create notes
                 </TextEffect>
                 <TextEffect
                   per="line"
@@ -61,9 +61,7 @@ export default function HeroSection() {
                   as="p"
                   className="mt-8 max-w-2xl text-pretty text-lg"
                 >
-                  Tailwindcss highly customizable components for building modern
-                  websites and applications that look and feel the way you mean
-                  it.
+                  Create notes using editor and save them in your notebook.
                 </TextEffect>
 
                 <AnimatedGroup
