@@ -7,8 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Notebook } from "@/db/schema";
-import { deleteNotebook } from "@/server/notebooks";
+import { Note } from "@/db/schema";
 import { EyeIcon, LoaderIcon, Trash2Icon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -25,23 +24,24 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { deleteNote } from "@/server/notes";
 
 interface Props {
-  notebook: Notebook;
+  note: Note;
 }
 
-export default function NotebookCard({ notebook }: Props) {
+export default function NoteCard({ note }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
 
-  const handleDeleteNotebook = async () => {
+  const handleDeleteNote = async () => {
     try {
       setIsLoading(true);
-      await deleteNotebook(notebook.id);
-      toast.success("Notebook deleted");
+      await deleteNote(note.id);
+      toast.success("Note deleted");
       setIsAlertDialogOpen(false);
     } catch (error) {
-      toast.error("Failed to delete notebook" + error);
+      toast.error("Failed to delete note" + error);
       setIsAlertDialogOpen(false);
     } finally {
       setIsLoading(false);
@@ -51,14 +51,14 @@ export default function NotebookCard({ notebook }: Props) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{notebook.name}</CardTitle>
+        <CardTitle>{note.title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <p>{notebook.notes.length} notes</p>
+        <p>{note.title}</p>
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
         <Button variant="outline" asChild>
-          <Link href={`/dashboard/notebook/${notebook.id}`}>
+          <Link href={`/dashboard/notebook/${note.notebookId}/note/${note.id}`}>
             <EyeIcon className="h-4 w-4" />
           </Link>
         </Button>
@@ -77,12 +77,12 @@ export default function NotebookCard({ notebook }: Props) {
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
                 This action cannot be undone. This will permanently delete your
-                notebook and remove all notes from it.
+                note.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteNotebook}>
+              <AlertDialogAction onClick={handleDeleteNote}>
                 {isLoading ? (
                   <LoaderIcon className="size-4 animate-spin" />
                 ) : (

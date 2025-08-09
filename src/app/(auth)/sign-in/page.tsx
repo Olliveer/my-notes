@@ -48,13 +48,13 @@ export default function LoginPage() {
       setIsLoading(true);
       await signIn({ email: data.email, password: data.password });
       toast("Sign in successful");
+      form.reset();
       router.push("/dashboard");
     } catch (error) {
       console.log(error);
       toast(`Something went wrong ${error}`);
     } finally {
       setIsLoading(false);
-      form.reset();
     }
   };
 
@@ -108,10 +108,7 @@ export default function LoginPage() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder=""
-                        {...field}
-                      />
+                      <Input placeholder="" {...field} />
                     </FormControl>
 
                     <FormMessage />
@@ -125,10 +122,7 @@ export default function LoginPage() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <Label
-                        htmlFor="pwd"
-                        className="text-title text-sm"
-                      >
+                      <Label htmlFor="pwd" className="text-title text-sm">
                         Password
                       </Label>
                       <Link
@@ -139,22 +133,14 @@ export default function LoginPage() {
                       </Link>
                     </div>
                     <FormControl>
-                      <Input
-                        type="password"
-                        placeholder=""
-                        {...field}
-                      />
+                      <Input type="password" placeholder="" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isLoading}
-              >
+              <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading && (
                   <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                 )}
@@ -179,25 +165,15 @@ export default function LoginPage() {
                 <FaGithub className="mr-2 size-4" />
                 <span>Github</span>
               </Button>
-              <Button
-                disabled
-                type="button"
-                variant="outline"
-              >
+              <Button disabled type="button" variant="outline">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="1em"
                   height="1em"
                   viewBox="0 0 256 256"
                 >
-                  <path
-                    fill="#f1511b"
-                    d="M121.666 121.666H0V0h121.666z"
-                  ></path>
-                  <path
-                    fill="#80cc28"
-                    d="M256 121.666H134.335V0H256z"
-                  ></path>
+                  <path fill="#f1511b" d="M121.666 121.666H0V0h121.666z"></path>
+                  <path fill="#80cc28" d="M256 121.666H134.335V0H256z"></path>
                   <path
                     fill="#00adef"
                     d="M121.663 256.002H0V134.336h121.663z"
@@ -215,11 +191,7 @@ export default function LoginPage() {
           <div className="p-3">
             <p className="text-accent-foreground text-center text-sm">
               Don&apos;t have an account ?
-              <Button
-                asChild
-                variant="link"
-                className="px-2"
-              >
+              <Button asChild variant="link" className="px-2">
                 <Link href="/sign-up">Create account</Link>
               </Button>
             </p>

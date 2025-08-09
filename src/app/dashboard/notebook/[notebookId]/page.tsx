@@ -1,3 +1,4 @@
+import NoteCard from "@/components/note-card";
 import { getNotebookById } from "@/server/notebooks";
 
 export default async function NotebookPage({
@@ -13,5 +14,14 @@ export default async function NotebookPage({
     return <div>notebook not found</div>;
   }
 
-  return <div>NotebookPage {data.notebook?.name}</div>;
+  return (
+    <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-2">
+        {data.notebook?.notes &&
+          data.notebook?.notes.map((note) => (
+            <NoteCard key={note.id} note={note} />
+          ))}
+      </div>
+    </div>
+  );
 }
